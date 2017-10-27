@@ -51,6 +51,29 @@ test('space parameter (nested objects)', function (t) {
     );
 });
 
+test('space parameter (empty nested objects)', function (t) {
+    t.plan(1);
+    var obj = { one: 1, two: {} };
+    t.equal(stringify(obj, {space: '  '}), ''
+        + '{\n'
+        + '  "one": 1,\n'
+        + '  "two": {\n'
+        + '  }\n'
+        + '}'
+    );
+});
+
+test('terseEmptyLiterals parameter', function (t) {
+    t.plan(1);
+    var obj = { one: 1, two: {} };
+    t.equal(stringify(obj, {space: '  ', terseEmptyLiterals: true}), ''
+        + '{\n'
+        + '  "one": 1,\n'
+        + '  "two": {}\n'
+        + '}'
+    );
+});
+
 test('space parameter (same as native)', function (t) {
     t.plan(1);
     // for this test, properties need to be in alphabetical order

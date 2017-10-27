@@ -4,6 +4,7 @@ module.exports = function (obj, opts) {
     if (!opts) opts = {};
     if (typeof opts === 'function') opts = { cmp: opts };
     var space = opts.space || '';
+    var terseEmptyLiterals = opts.terseEmptyLiterals || false;
     if (typeof space === 'number') space = Array(space+1).join(' ');
     var cycles = (typeof opts.cycles === 'boolean') ? opts.cycles : false;
     var replacer = opts.replacer || function(key, value) { return value; };
@@ -41,7 +42,10 @@ module.exports = function (obj, opts) {
                 var item = stringify(node, i, node[i], level+1) || json.stringify(null);
                 out.push(indent + space + item);
             }
-            return '[' + out.join(',') + indent + ']';
+            return '['
+                + out.join(',')
+                + ((terseEmptyLiterals && out.length === 0) ? '' : indent)
+                + ']';
         }
         else {
             if (seen.indexOf(node) !== -1) {
@@ -65,7 +69,10 @@ module.exports = function (obj, opts) {
                 out.push(indent + space + keyValue);
             }
             seen.splice(seen.indexOf(node), 1);
-            return '{' + out.join(',') + indent + '}';
+            return '{'
+                + out.join(',')
+                + ((terseEmptyLiterals && out.length === 0) ? '' : indent)
+                + '}';
         }
     })({ '': obj }, '', obj, 0);
 };
